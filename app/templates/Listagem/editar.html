@@ -1,0 +1,7 @@
+<main>
+    <h1> Editar tarefa</h1>
+    <form method="post" action="/tarefa/update/{{ tarefa[0] }}">
+        <input type="text" name="tarefa" value="{{ tarefa[1] }}" required minlength="1">
+        <button type="submit"> atualizar tarefa </button>
+    </form>
+</main>

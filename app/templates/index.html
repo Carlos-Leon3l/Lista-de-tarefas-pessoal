@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>{{ 'Editar' if tarefa else 'Adicionar' }} Tarefa</title>
+
+</head>
+<body>
+    <h1>{{'Editar' if tarefa else 'Adicionar'}} Tarefa </h1>
+    {% if tarefa %}
+        <article>
+            {%include 'Listagem/editar.html' %}
+        </article>
+    {% else %}
+        <article>
+            {% include 'Listagem/Adicionar.html' %}
+        </article>
+    {% endif %}
+    {% include 'Listagem/listadetarefas.html' %}
+</body>
+</html>

@@ -1,0 +1,22 @@
+<main>
+    <h2>Lista de Tarefas </h2>
+    <ul>
+        {% for tarefa_add in tarefas %}
+            <li>
+                {{ tarefa_add[1] }}
+                <form action="/tarefa/update_status/{{ tarefa_add[0] }}" method="POST">
+                    <input type="checkbox" name="status" 
+                        {% if tarefa_add[2] == 1 %} 
+                        checked
+
+                        {% endif %}
+                        onchange="this.form.submit()">
+                </form>
+                <a href="/tarefa/edit/{{ tarefa_add[0] }}"> Editar </a>
+
+                <a href="/tarefa/delete/{{ tarefa_add[0] }}"> Excluir</a>
+            </li>
+            <br>
+        {% endfor %}
+    </ul>
+</main>
