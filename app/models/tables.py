@@ -51,7 +51,7 @@ def listar_tarefas():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM lista_tarefas")
     tarefas = cursor.fetchall()
-    conn.commit() # atualização nova
+    conn.commit() 
     conn.close()
     return tarefas
 
@@ -107,7 +107,6 @@ def get_user_by_id(usuario_id:int):
     cursor.execute("SELECT id, username, email, password FROM usuarios WHERE id = :1", [usuario_id])
     todos_dados_usuarios = cursor.fetchone()
     if todos_dados_usuarios:
-        # TRANSFORMAÇÃO MÁGICA ACONTECE AQUI
         user_dict = {
             "id": todos_dados_usuarios[0],
             "username": todos_dados_usuarios[1],
@@ -122,15 +121,16 @@ def get_user_by_email(email:str):
     conn = conectar()
     cursor = conn.cursor()
     cursor.execute("""
-                   SELECT email FROM usuarios WHERE email = :1
+                   SELECT id, email, password FROM usuarios WHERE email = :1
                    """, [email])
     retorno_email = cursor.fetchone()
     if retorno_email:
         user_dict = {
-        "email": retorno_email[0]
+        "usuario_id": retorno_email[0],
+        "email": retorno_email[1],
+        "password": retorno_email[2]
         }
         return user_dict
     conn.commit()
     conn.close()
-    
     

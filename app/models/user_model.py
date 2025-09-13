@@ -13,4 +13,3 @@ class UserCreate(RegisterRequest):
     id: int
     class Config:
         from_attributes = True
-    
