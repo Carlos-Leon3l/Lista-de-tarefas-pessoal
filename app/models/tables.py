@@ -31,7 +31,10 @@ def criar_tabela():
     CREATE TABLE lista_tarefas (
         id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         tarefa VARCHAR2(255) NOT NULL, 
-        status NUMBER(1) DEFAULT 0
+        status NUMBER(1) DEFAULT 0,
+        usuario_id NUMBER,
+        CONSTRAINT fk_usuario_tarefa
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
     )                
     """)
     else:
@@ -39,17 +42,16 @@ def criar_tabela():
     conn.commit()
     conn.close()
     
-def inserir_tarefa(tarefa):
+def inserir_tarefa(usuario_id, tarefa):
     conn = conectar()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO lista_tarefas (tarefa) VALUES (:1) ", [tarefa])
-    conn.commit()
+    cursor.execute("INSERT INTO lista_tarefas (tarefa) VALUES (:1) WHERE usuario_id = :2", [tarefa, usuario_id])
     conn.close()
     
-def listar_tarefas():
+def listar_tarefas(usuario_id):
     conn = conectar()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM lista_tarefas")
+    cursor.execute("SELECT * FROM lista_tarefas WHERE usuario_id = :1", [usuario_id])
     tarefas = cursor.fetchall()
     conn.commit() 
     conn.close()
@@ -126,7 +128,7 @@ def get_user_by_email(email:str):
     retorno_email = cursor.fetchone()
     if retorno_email:
         user_dict = {
-        "usuario_id": retorno_email[0],
+        "id": retorno_email[0], #ERREI A DISGRACA DO NOME KKKKKKKKKKKK
         "email": retorno_email[1],
         "password": retorno_email[2]
         }

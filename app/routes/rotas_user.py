@@ -1,10 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from models.user_model import RegisterRequest, UserCreate, LoginRequest
 from models import tables
 from security.password import get_password_for_hashed
-from security.token import gerar_token
 from controllers.controller_login import login
-import bcrypt
+
+
 
 router = APIRouter()
 
@@ -48,11 +48,43 @@ def return_user_by_id(usuario_id: int):
     return db_usuario
 
 
+
+# async def get_current_activate_user(current_user: Annotated[User, Depends(get_current_user)]):
+#     if current_user.disabled:
+#         raise HTTPException(status_code=400, detail="usuario inativo")
+#     return current_user
+
+"""
+@router.post("/token")
+def login_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    user_dict = fake_users_db.get(form_data.username)
+    if not user_dict:
+        raise HTTPException(status_code=400, detail="Usuario incorreto ou nao encontrado")
+    user = UserInDB(**user_dict)
+    hashed_passoword = fake_hash_password(form_data.password)
+    if not hashed_passoword == user.hashed_password:
+        raise HTTPException(status_code=400, detail="Senha incorreta")
+    return {"access_token": user.username,
+            "token_type": "bearer"}
+"""
+    
+# @router.get("/item_teste_token")
+# async def read_user_me(current_user: Annotated[User, Depends(get_current_activate_user)]):
+#     return current_user
+
 """
 CONTA TESTE LOGIN
 {
   "username": "carlos123",
   "email": "carlos1@gmail.com",
+  "password": "12345678"
+}
+"""
+
+"""
+{
+  "username": "carlos leonel",
+  "email": "carlos10@gmail.com",
   "password": "12345678"
 }
 """

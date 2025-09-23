@@ -1,18 +1,19 @@
 from fastapi import APIRouter, Request, Depends
 from controllers import lista_tarefas_controller
+from security.token import get_current_user
+from models.user_model import TokenPayload
 
 
 router = APIRouter()
 
-
 @router.get("/")
-def pagina_inicial(request: Request):
-    return lista_tarefas_controller.mostrar_tarefa(request)
+def pagina_inicial(request: Request, require_permission: TokenPayload = Depends(get_current_user)):
+    return lista_tarefas_controller.mostrar_tarefa(request, require_permission)
 
-@router.post("/tarefa")
-async def adicionar(request:Request):
+@router.post("/adicionar_tarefa")
+async def adicionar(request:Request,  require_permission: TokenPayload = Depends(get_current_user)):
     form = await request.form()
-    return await lista_tarefas_controller.adicionar_tarefa(request, tarefa=form["tarefa"])
+    return await lista_tarefas_controller.adicionar_tarefa(request, require_permission, tarefa=form["tarefa"])
 
 @router.get("/tarefa/delete/{tarefa_id}")
 def deletar(tarefa_id: int):
@@ -34,4 +35,5 @@ async def atualizacao_status(request:Request, tarefa_id:int):
     status = 1 if form.get("status") == "on" else 0
     print(status)
     return await lista_tarefas_controller.atualizar_status(request,tarefa_id, status)
+    
     
