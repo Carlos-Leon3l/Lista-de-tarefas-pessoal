@@ -5,13 +5,17 @@ import os
 
 origins = [ 
     "http://127.0.0.1:8001"
-    "http://127.0.0.1:8080"
+    "http://localhost:5173"
     ]
 
 app = FastAPI()
-app.add_middleware(CORSMiddleware,allow_origins = origins,
-                   allow_credentials = True,
-                   allow_methods = ["*"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins, # Permite as origens listadas
+    allow_credentials=True, # Permite cookies/credenciais
+    allow_methods=["*"],    # Permite todos os métodos (GET, POST, etc.)
+    allow_headers=["*"],    # Permite todos os cabeçalhos
+)
 
 app.include_router(rotas_lista_tarefa.router)
 app.include_router(rotas_user.router)

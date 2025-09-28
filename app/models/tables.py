@@ -42,11 +42,13 @@ def criar_tabela():
     conn.commit()
     conn.close()
     
-def inserir_tarefa(usuario_id, tarefa):
+def inserir_tarefa(tarefa, usuario_id):
     conn = conectar()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO lista_tarefas (tarefa) VALUES (:1) WHERE usuario_id = :2", [tarefa, usuario_id])
+    cursor.execute("INSERT INTO lista_tarefas (tarefa, usuario_id) VALUES (:1, :2)", [tarefa, usuario_id])
+    conn.commit()
     conn.close()
+
     
 def listar_tarefas(usuario_id):
     conn = conectar()
@@ -57,39 +59,47 @@ def listar_tarefas(usuario_id):
     conn.close()
     return tarefas
 
-def excluir_tarefa(tarefa_id):
+def repo_excluir_tarefa(tarefa_id, usuario_id):
     conn = conectar()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM lista_tarefas WHERE id = :1", [tarefa_id])
+    cursor.execute("DELETE FROM lista_tarefas WHERE id = :1 AND usuario_id = :2",[tarefa_id, usuario_id])
     conn.commit()
     conn.close()
     
 def buscar_tarefa_por_id(tarefa_id):
     conn = conectar()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM lista_tarefas WHERE id = :1", [tarefa_id])
-    tarefa = cursor.fetchone()
-    conn.close()
+    cursor.execute("SELECT id, tarefa, status, usuario_id FROM lista_tarefas WHERE id = :1", [tarefa_id])
+    info_tarefa = cursor.fetchone()
+    if info_tarefa:
+        user_dict = {
+            "id": info_tarefa[0],
+            "tarefa": info_tarefa[1],
+            "status": info_tarefa[2],
+            "usuario_id": info_tarefa[3]
+        }
+        return user_dict
     conn.commit()
-    return tarefa
+    conn.close()
 
-def atualizar_tarefa(tarefa_id, tarefa):
+def atualizar_tarefa(tarefa_id, tarefa, usuario_id):
     conn = conectar()
     cursor = conn.cursor()
     cursor.execute("""UPDATE lista_tarefas 
                    SET tarefa = :1
-                   WHERE id = :2
-                   """, [tarefa, tarefa_id])
+                   WHERE id = :2 AND usuario_id = :3
+                   """, [tarefa, tarefa_id, usuario_id])
     conn.commit()
     conn.close()
 
-def atualizar_status(tarefa_id, status):
+def repo_atualizar_status(status, tarefa_id, usuario_id):
     conn = conectar()
     cursor = conn.cursor()
     cursor.execute(""" UPDATE lista_tarefas
                    SET status = :1
                    WHERE id = :2 
-                   """, [status, tarefa_id])
+                   AND usuario_id = :1
+                   """, [status, tarefa_id, usuario_id])
     conn.commit()
     conn.close()
     
